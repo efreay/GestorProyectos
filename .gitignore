@@ -1,38 +1,46 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Compiled class files
+*.class
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# JAR / WAR / EAR
+*.jar
+*.war
+*.ear
+
+# IDEs
+.idea/
 *.iml
 *.ipr
-
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+*.iws
 .vscode/
+*.swp
 
-### Mac OS ###
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+target/
+
+# Maven
+target/
+
+# Gradle
+.gradle/
+build/
+
+# macOS
 .DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Other
+*.tmp
+
