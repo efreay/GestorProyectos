@@ -12,6 +12,6 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        new DashboardFrame();  // <-- se cambia aquí
+        new DashboardFrame();
     }
 }

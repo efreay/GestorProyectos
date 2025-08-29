@@ -9,25 +9,37 @@ import java.awt.*;
 
 public class AnalistaDialog extends JDialog {
 
+    private JTextField txtId;
+    private JTextField txtNombre;
+    private JComboBox<String> cmbRol;
+    private JComboBox<String> cmbEspecialidad;
+    private JButton btnGuardar;
+    private MySQLService mysql;
+
     public AnalistaDialog(JFrame owner) {
-        super(owner, "Añadir Participante", true);
+        this(owner, null);
+    }
+
+    public AnalistaDialog(JFrame owner, Analista analista) {
+        super(owner, analista == null ? "Añadir Participante" : "Editar Participante", true);
+        mysql = new MySQLService();
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5,5,5,5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JTextField txtId = new JTextField();
-        JTextField txtNombre = new JTextField();
+        txtId = new JTextField();
+        txtNombre = new JTextField();
 
         String[] roles = {"Líder Procesos", "Analista Senior", "Analista Junior"};
-        JComboBox<String> cmbRol = new JComboBox<>(roles);
+        cmbRol = new JComboBox<>(roles);
 
         String[] especialidades = {"Automatización", "Análisis de datos", "Documentación", "Optimización",
                 "UI/UX", "Integraciones", "Testing", "BPM"};
-        JComboBox<String> cmbEspecialidad = new JComboBox<>(especialidades);
+        cmbEspecialidad = new JComboBox<>(especialidades);
 
-        JButton btnGuardar = new JButton("Guardar");
+        btnGuardar = new JButton(analista == null ? "Guardar" : "Guardar Cambios");
 
         gbc.gridx = 0; gbc.gridy = 0;
         add(new JLabel("ID:"), gbc);
@@ -52,6 +64,14 @@ public class AnalistaDialog extends JDialog {
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         add(btnGuardar, gbc);
 
+        if (analista != null) {
+            txtId.setText(String.valueOf(analista.getId()));
+            txtId.setEditable(false);
+            txtNombre.setText(analista.getNombre());
+            cmbRol.setSelectedItem(analista.getRol());
+            cmbEspecialidad.setSelectedItem(analista.getEspecialidad());
+        }
+
         btnGuardar.addActionListener(e -> {
             try {
                 int id = Integer.parseInt(txtId.getText());
@@ -65,9 +85,14 @@ public class AnalistaDialog extends JDialog {
                 }
 
                 Analista nuevo = new Analista(id, nombre, rol, especialidad);
-                MySQLService service = new MySQLService();
-                service.insertarAnalista(nuevo);
-                Mensajes.mostrarInfo("Participante guardado en la base de datos.");
+
+                if (analista == null) {
+                    mysql.insertarAnalista(nuevo);
+                    Mensajes.mostrarInfo("Participante guardado en la base de datos.");
+                } else {
+                    mysql.actualizarAnalista(nuevo);
+                    Mensajes.mostrarInfo("Participante actualizado correctamente.");
+                }
                 dispose();
             } catch (Exception ex) {
                 ex.printStackTrace();

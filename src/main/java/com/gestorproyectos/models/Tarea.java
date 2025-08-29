@@ -11,15 +11,23 @@ public class Tarea implements Serializable {
     private LocalDate fechaFin;
     private int duracionHoras;
     private Analista analista;
+    private String estado;  // ✅ NUEVO CAMPO
 
     public Tarea(String nombre, String descripcion, LocalDate fechaInicio,
-                 LocalDate fechaFin, int duracionHoras, Analista analista) {
+                 LocalDate fechaFin, int duracionHoras, Analista analista, String estado) {
         this.nombre = Objects.requireNonNull(nombre, "El nombre no puede ser nulo");
         this.descripcion = (descripcion != null) ? descripcion : "";
-        this.fechaInicio = fechaInicio;  // puede ser nula
-        this.fechaFin = fechaFin;        // puede ser nula
-        this.duracionHoras = (duracionHoras >= 0) ? duracionHoras : 0;
-        this.analista = analista;        // puede ser nulo
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.duracionHoras = Math.max(duracionHoras, 0);
+        this.analista = analista;
+        this.estado = (estado != null) ? estado : "Pendiente";  // ✅ Valor por defecto
+    }
+
+    // Constructor anterior opcional para compatibilidad
+    public Tarea(String nombre, String descripcion, LocalDate fechaInicio,
+                 LocalDate fechaFin, int duracionHoras, Analista analista) {
+        this(nombre, descripcion, fechaInicio, fechaFin, duracionHoras, analista, "Pendiente");
     }
 
     // Getters
@@ -29,11 +37,18 @@ public class Tarea implements Serializable {
     public LocalDate getFechaFin() { return fechaFin; }
     public int getDuracionHoras() { return duracionHoras; }
     public Analista getAnalista() { return analista; }
+    public String getEstado() { return estado; }  // ✅ NUEVO GETTER
+
+    // Setters
+    public void setEstado(String estado) {
+        this.estado = (estado != null) ? estado : "Pendiente";
+    }
 
     @Override
     public String toString() {
-        return String.format("Tarea [Nombre=%s, FechaInicio=%s, FechaFin=%s, Duración=%d horas, Analista=%s]",
+        return String.format("Tarea [Nombre=%s, Estado=%s, FechaInicio=%s, FechaFin=%s, Duración=%d horas, Analista=%s]",
                 nombre,
+                estado,
                 (fechaInicio != null ? fechaInicio : "Sin fecha"),
                 (fechaFin != null ? fechaFin : "Sin fecha"),
                 duracionHoras,
